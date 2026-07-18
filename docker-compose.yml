@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: uks_mapil_app
+    restart: always
+    ports:
+      - "8005:80" # Akses dari luar pakai port 8005 (bisa diubah sesuai kebutuhan)
+    # environment vars ini akan menimpa yang ada di .env jika diperlukan
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=172.18.0.6 # IP dari global mariadb
+      - DB_PORT=3306
+      - DB_DATABASE=uks
+      - DB_USERNAME=root
+      - DB_PASSWORD=sensor # Sesuai dengan konfigurasi global_db
+    networks:
+      - lapo_aozora_net
+    volumes:
+      - .:/var/www/html
+      - /var/www/html/vendor
+      - /var/www/html/node_modules
+
+networks:
+  lapo_aozora_net:
+    external: true
